@@ -1,6 +1,6 @@
 const User = require("../shemas/user.shema");
 const brcpt = require('bcrypt');
-
+const jwt = require('jsonwebtoken');
 
 const getUsers = async (req, res) => {
   try {
@@ -51,8 +51,19 @@ const login = async (req, res) => {
   }
   try {
     if (await brcpt.compare(req.body.password, loginingUser.password)) {
+
+      //Eğer password doğruysa token oluşturulur
+      const secretKey = process.env.api_secret_key // token oluşturulurken kullanılacak secret key environment değişkeninden alınır
+      const { name, password } = req.body; // login esnasında kullanılan username ve şifre değişkene atanır
+      const payLoad = {name, password}; // bu username ve şifre payload olarak ayarlanır
+      const token = jwt.sign(payLoad, secretKey, {expiresIn: 120 /*dk*/}); // TOKEN'IN OLUŞTUĞU KOD
       console.log('Success');
-      res.send('Success');
+      res.status(201).json({
+        status: true,
+        name,
+        password,
+        token
+      });
     } else {
       console.log('Not Allowed');
       res.send('Not Allowed');

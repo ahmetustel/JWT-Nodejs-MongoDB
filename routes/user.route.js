@@ -1,4 +1,5 @@
 const express = require("express");
+const Jwtoken = require("../middleware/Jwtoken");
 
 const {
   getUsers,
@@ -6,7 +7,7 @@ const {
   createUser,
   login,
   // updateUser,
-  deleteUser,
+  deleteUser
 } = require("../controllers/user.controller");
 
 const router = express.Router();
@@ -19,6 +20,8 @@ router.get("/users/:name", getUser);
 router.post("/users", createUser);
 
 router.post("/login",login);
+
+// router.get("/login/:name",Jwtoken,getUser);
 
 // router.patch("/users/:name", updateUser);
 
